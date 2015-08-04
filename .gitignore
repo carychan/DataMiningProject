@@ -1,0 +1,63 @@
+1.Code for SOM using MATLAB
+
+clc
+clear
+close dataMingingDataset=load('dataMingingDataset.txt') inputs = dataMingingDataset;
+%Create a Self-Organizing Map
+dimension1 = 2;
+dimension2 = 3;
+%net = selforgmap([dimension1 dimension2]);
+net = selforgmap([dimension1 dimension2],'topologyFcn','gridtop'); net.trainParam.epochs=100
+% Train the Network
+[net,tr] = train(net,inputs);
+% Test the Network
+outputs = net(inputs);
+% View the Network
+view(net)
+% Plots
+% Uncomment these lines to enable various plots.
+%figure, plotsomtop(net)
+%figure, plotsomnc(net)
+%figure, plotsomnd(net)
+%figure, plotsomplanes(net)
+figure, plotsomhits(net,inputs)
+%figure, plotsompos(net,inputs)
+inputs = inputs;
+targets = outputs;
+% Create a Pattern Recognition Network
+hiddenLayerSize = 10;
+net = patternnet(hiddenLayerSize);
+% Setup Division of Data for Training, Validation, Testing net.divideParam.trainRatio = 70/100; net.divideParam.valRatio = 15/100; net.divideParam.testRatio = 15/100;
+% Train the Network
+[net,tr] = train(net,inputs,targets);
+% Test the Network
+outputs = net(inputs);
+errors = gsubtract(targets,outputs);
+performance = perform(net,targets,outputs)
+% View the Network
+view(net)
+% Plots
+% Uncomment these lines to enable various plots.
+%figure, plotperform(tr)
+%figure, plottrainstate(tr)
+figure, plotconfusion(targets,outputs)
+%figure, ploterrhist(errors)
+
+
+2. Code for k-NN using R
+install.packages("RWeka")
+library(RWeka)
+
+#Cause problem
+DataOfCause<-read.table(file=
+"/Users/chenchuandong/Desktop/DataMiningDataset_Cause.csv",header=TRUE,sep= ";",dec=".",na.string="NA")
+summary(DataOfCause)
+classifier <- IBk(target_cause ~ ., data = DataOfCause,control = Weka_control(K = 20, X = TRUE))
+summary(classifier)
+
+#Severity problem
+DataOfSeverity<-read.table(file=
+"/Users/chenchuandong/Desktop/DataMiningDataset_Severity.csv",header=TRUE,sep= ";",dec=".",na.string="NA")
+summary(DataOfSeverity)
+classifier <- IBk(target_severity ~ ., data = DataOfSeverity,control = Weka_control(K = 20, X = TRUE))
+summary(classifier)
